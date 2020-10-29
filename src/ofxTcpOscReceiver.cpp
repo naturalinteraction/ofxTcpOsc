@@ -47,7 +47,7 @@ bool ofxTcpOscReceiver::getNextMessage(ofxTcpOscMessage * m) {
 
 void ofxTcpOscReceiver::_receiveOscMessages(int clientId, deque<ofPtr<ofxTcpOscMessage> > &messages) {
     int received = server.receiveRawBytes(clientId, packet, nBytes);
-    if (received == 0) {
+    if (received <= 0) {
         return;
     }
 
@@ -69,7 +69,7 @@ void ofxTcpOscReceiver::_receiveOscMessages(int clientId, deque<ofPtr<ofxTcpOscM
     string host = server.getClientIP(clientId);
     int port = server.getClientPort(clientId);
     m->setRemoteEndpoint(host, port);
-    
+
     _messages.push_back(m);
 }
 
