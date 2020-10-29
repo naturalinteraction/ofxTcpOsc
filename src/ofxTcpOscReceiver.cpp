@@ -18,7 +18,7 @@ ofxTcpOscReceiver::~ofxTcpOscReceiver() {
 }
 
 void ofxTcpOscReceiver::setup(int listen_port) {
-    server.setup(listen_port, true);
+    server.setup(listen_port, false);  // not blocking
     ofAddListener(ofEvents().update, this, &ofxTcpOscReceiver::update);
 }
 
@@ -46,9 +46,7 @@ bool ofxTcpOscReceiver::getNextMessage(ofxTcpOscMessage * m) {
 //#pragma mark - Private Methods
 
 void ofxTcpOscReceiver::_receiveOscMessages(int clientId, deque<ofPtr<ofxTcpOscMessage> > &messages) {
-    
     int received = server.receiveRawBytes(clientId, packet, nBytes);
-    
     if (received == 0) {
         return;
     }
