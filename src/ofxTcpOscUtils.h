@@ -151,25 +151,4 @@ namespace ofxTcpOsc {
         }
         return u.i;
     }
-
-//    int main() {
-//        vector<char> c;
-//        int32_to_chars(65535, c);
-//        for (int i=0; i<c.size(); i++) {
-//            printf("%d\n", (unsigned char)c[i]);
-//        }
-//        
-//        c.clear();
-//        int64_to_chars(65535, c);
-//        for (int i=0; i<c.size(); i++) {
-//            printf("%d\n", (unsigned char)c[i]);
-//        }
-//        
-//        c.clear();
-//        float_to_chars(0.123, c);
-//        for (int i=0; i<c.size(); i++) {
-//            printf("%d\n", (unsigned char)c[i]);
-//        }
-//    }
-        
 }
