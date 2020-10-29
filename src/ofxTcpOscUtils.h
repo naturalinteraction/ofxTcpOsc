@@ -84,7 +84,7 @@ namespace ofxTcpOsc {
             }
         }
     }
-    
+
     static float chars_to_float(char* c) {
         union {
             float f;
@@ -124,7 +124,7 @@ namespace ofxTcpOsc {
         }
         return u.i;
     }
-    
+
     static uint64_t chars_to_int64(char* c) {
         union {
             uint64_t i;

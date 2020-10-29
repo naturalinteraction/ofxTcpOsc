@@ -21,14 +21,14 @@ void ofxTcpOscMessage::clear() {
 }
 
 //----------------------------
-#pragma mark - Get Methods
+//#pragma mark - Get Methods
 
 int ofxTcpOscMessage::getNumArgs() const {
     return args.size();
 }
 
 ofxTcpOscArgType ofxTcpOscMessage::getArgType(int index) const {
-    if (index >= args.size()) {
+    if (index >= (int)args.size()) {
         ofLogError("ofxTcpOscMessage") << "getArgType(): index " << index << " out of bounds";
         return OFXTCPOSC_TYPE_INDEXOUTOFBOUNDS;
     } else {
@@ -37,7 +37,7 @@ ofxTcpOscArgType ofxTcpOscMessage::getArgType(int index) const {
 }
 
 string ofxTcpOscMessage::getArgTypeName(int index) const {
-    if (index >= args.size()) {
+    if (index >= (int)args.size()) {
         ofLogError("ofxTcpOscMessage") << "getArgTypeName(): index " << index << " out of bounds";
         return "INDEX OUT OF BOUNDS";
     } else {
@@ -108,7 +108,7 @@ string ofxTcpOscMessage::getArgAsString(int index) const {
 
 
 //------------------------------------------------------------
-#pragma mark - Set Methods
+//#pragma mark - Set Methods
 
 void ofxTcpOscMessage::addIntArg(int32_t argument) {
     args.push_back(new ofxTcpOscArgInt32(argument));
@@ -128,7 +128,7 @@ void ofxTcpOscMessage::addStringArg(string argument) {
 
 
 //------------------------------------------------------------
-#pragma mark - housekeeping
+//#pragma mark - housekeeping
 
 ofxTcpOscMessage& ofxTcpOscMessage::copy(const ofxTcpOscMessage &other) {
     clear();
@@ -138,7 +138,7 @@ ofxTcpOscMessage& ofxTcpOscMessage::copy(const ofxTcpOscMessage &other) {
     remote_port = other.remote_port;
     
     // copy arguments
-    for (int i=0; i<other.args.size(); i++) {
+    for (int i=0; i<(int)other.args.size(); i++) {
         ofxTcpOscArgType argType = other.getArgType(i);
         if (argType == OFXTCPOSC_TYPE_INT32) {
             args.push_back(new ofxTcpOscArgInt32(other.getArgAsInt32(i)));

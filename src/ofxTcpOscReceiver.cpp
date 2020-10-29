@@ -43,7 +43,7 @@ bool ofxTcpOscReceiver::getNextMessage(ofxTcpOscMessage * m) {
     return true;
 }
 
-#pragma mark - Private Methods
+//#pragma mark - Private Methods
 
 void ofxTcpOscReceiver::_receiveOscMessages(int clientId, deque<ofPtr<ofxTcpOscMessage> > &messages) {
     
@@ -103,7 +103,7 @@ int ofxTcpOscReceiver::_parsePacketAddress(char *packet, string &output) {
 }
 
 int ofxTcpOscReceiver::_parsePacketTypes(char *packet, string &output, int offset) {
-    int maxLen = 1024;
+    //int maxLen = 1024;
     output.clear();
     output.append(&packet[offset+1]);
     
@@ -114,8 +114,8 @@ int ofxTcpOscReceiver::_parsePacketTypes(char *packet, string &output, int offse
 
 void ofxTcpOscReceiver::_parsePacketArgs(char *packet, ofPtr<ofxTcpOscMessage> m, int offset, string typeString) {
 
-    int size;
-    for (int i=0; i<typeString.size(); i++) {
+    int size = 0;
+    for (int i=0; i<(int)typeString.size(); i++) {
         if (typeString[i] == 'i') {
             size = 4;
             int32_t arg = chars_to_int32(&packet[offset]);

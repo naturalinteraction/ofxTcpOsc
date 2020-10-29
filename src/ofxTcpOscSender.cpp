@@ -60,7 +60,7 @@ void ofxTcpOscSender::sendMessage(ofxTcpOscMessage &message) {
             ofLogError("ofxTcpOscSender") << "sendMessage(): bad argument type " << message.getArgType(i);
             assert(false);
         }
-        for (int i=0; i<buf.size(); i++) {
+        for (unsigned int i=0; i<buf.size(); i++) {
             output.push_back(buf[i]);
         }
     }
@@ -88,7 +88,7 @@ void ofxTcpOscSender::appendStringToOscString(string input, vector<char> &output
     if (numNulls == 0) {
         numNulls = 4;
     }
-    for (int i=0; i<input.size(); i++) {
+    for (unsigned int i=0; i<input.size(); i++) {
         output.push_back(input[i]);
     }
     for (int i=0; i<numNulls; i++) {
@@ -101,7 +101,7 @@ void ofxTcpOscSender::makeOscString(string input, vector<char> &output) {
     if (numNulls == 0) {
         numNulls = 4;
     }
-    for (int i=0; i<input.size(); i++) {
+    for (unsigned int i=0; i<input.size(); i++) {
         output.push_back(input[i]);
     }
     for (int i=0; i<numNulls; i++) {
