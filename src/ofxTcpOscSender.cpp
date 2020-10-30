@@ -30,7 +30,7 @@ void ofxTcpOscSender::shutdown() {
     tcpClient.close();
 }
 
-void ofxTcpOscSender::sendMessage(ofxTcpOscMessage &message) {
+bool ofxTcpOscSender::sendMessage(ofxTcpOscMessage &message) {
 
     using namespace ofxTcpOsc;
     
@@ -59,6 +59,7 @@ void ofxTcpOscSender::sendMessage(ofxTcpOscMessage &message) {
         } else {
             ofLogError("ofxTcpOscSender") << "sendMessage(): bad argument type " << message.getArgType(i);
             assert(false);
+            return false;
         }
         for (unsigned int i=0; i<buf.size(); i++) {
             output.push_back(buf[i]);
@@ -78,9 +79,17 @@ void ofxTcpOscSender::sendMessage(ofxTcpOscMessage &message) {
     }
     
     if (!tcpClient.isConnected()) {
-        tcpClient.setup(_hostname, _port);
+        if (! tcpClient.setup(_hostname, _port))
+        {
+            // printf("tcp client setup failed\n");
+            return false;
+        }
     }
-    tcpClient.sendRawBytes(output.data(), output.size());
+    if (! tcpClient.sendRawBytes(output.data(), output.size()))
+    {
+        return false;
+    }
+    return true;
 }
 
 void ofxTcpOscSender::appendStringToOscString(string input, vector<char> &output) {

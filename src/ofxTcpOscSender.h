@@ -30,7 +30,7 @@ public:
     ~ofxTcpOscSender();
     
     void setup(string hostname, int port);
-    void sendMessage(ofxTcpOscMessage & message);
+    bool sendMessage(ofxTcpOscMessage & message);
     
 private:
     void shutdown();
