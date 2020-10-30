@@ -17,9 +17,11 @@ ofxTcpOscReceiver::~ofxTcpOscReceiver() {
     
 }
 
-void ofxTcpOscReceiver::setup(int listen_port) {
-    server.setup(listen_port, false);  // not blocking
+bool ofxTcpOscReceiver::setup(int listen_port) {
+    if (! server.setup(listen_port, false))  // not blocking
+        return false;
     ofAddListener(ofEvents().update, this, &ofxTcpOscReceiver::update);
+    return true;
 }
 
 void ofxTcpOscReceiver::update(ofEventArgs & args) {

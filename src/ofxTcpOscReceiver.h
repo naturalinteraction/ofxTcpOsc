@@ -18,7 +18,7 @@ public:
     ofxTcpOscReceiver();
     ~ofxTcpOscReceiver();
     
-    void setup(int listen_port);
+    bool setup(int listen_port);
     void update(ofEventArgs & args);
     bool hasWaitingMessages();
     bool getNextMessage(ofxTcpOscMessage *);
