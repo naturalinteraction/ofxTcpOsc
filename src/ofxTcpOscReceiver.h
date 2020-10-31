@@ -25,6 +25,8 @@ public:
 
     ofxTCPServer server;
     
+    void shutdown();
+
 private:
     void _receiveOscMessages(int clientId, deque<ofPtr<ofxTcpOscMessage> > & messages);
     

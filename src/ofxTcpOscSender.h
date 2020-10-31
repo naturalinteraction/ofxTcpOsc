@@ -32,8 +32,9 @@ public:
     bool setup(string hostname, int port);
     bool sendMessage(ofxTcpOscMessage & message);
     
-private:
     void shutdown();
+
+private:
     void appendMessage(ofxTcpOscMessage & message);
     
     ofxTCPClient tcpClient;

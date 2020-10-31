@@ -24,6 +24,10 @@ bool ofxTcpOscReceiver::setup(int listen_port) {
     return true;
 }
 
+void ofxTcpOscReceiver::shutdown() {
+    server.close();
+}
+
 void ofxTcpOscReceiver::update(ofEventArgs & args) {
     // allows multiple connections
     // though it is intended to have only one connection
