@@ -15,15 +15,18 @@ ofxTcpOscSender::~ofxTcpOscSender() {
     tcpClient.close();
 }
 
-void ofxTcpOscSender::setup(string hostname, int port) {
+bool ofxTcpOscSender::setup(string hostname, int port) {
     tcpClient.close();
     bool success = tcpClient.setup(hostname, port);
     if (success) {
         ofLog() << "successfully connected! at " << hostname << ", " << port;
     }
+    else
+        return false;
     tcpClient.setMessageDelimiter("\n");
     _hostname = hostname;
     _port = port;
+    return true;
 }
 
 void ofxTcpOscSender::shutdown() {

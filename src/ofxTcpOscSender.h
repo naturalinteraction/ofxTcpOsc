@@ -29,7 +29,7 @@ public:
     ofxTcpOscSender();
     ~ofxTcpOscSender();
     
-    void setup(string hostname, int port);
+    bool setup(string hostname, int port);
     bool sendMessage(ofxTcpOscMessage & message);
     
 private:
