@@ -24,7 +24,8 @@ public:
     bool getNextMessage(ofxTcpOscMessage *);
 
     ofxTCPServer server;
-    
+
+    bool sendMessage(ofxTcpOscMessage & message);
     void shutdown();
 
 private:
@@ -36,7 +37,12 @@ private:
     int _parsePacketAddress(char* packet, string& output);
     int _parsePacketTypes(char* packet, string& output, int offset);
     void _parsePacketArgs(char* packet, ofPtr<ofxTcpOscMessage> m, int offset, string typeString);
-    
+
+    // helper methods
+    string makeOscTypeTagString(ofxTcpOscMessage & message);
+    void appendStringToOscString(string input, vector<char> & output);
+    void makeOscString(string input, vector<char> & output);
+
     deque<ofPtr<ofxTcpOscMessage> > _messages;
     
     int nBytes = 4096;

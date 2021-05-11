@@ -14,7 +14,7 @@ ofxTcpOscReceiver::ofxTcpOscReceiver() {
 }
 
 ofxTcpOscReceiver::~ofxTcpOscReceiver() {
-    
+    server.close();
 }
 
 bool ofxTcpOscReceiver::setup(int listen_port) {
@@ -144,5 +144,105 @@ void ofxTcpOscReceiver::_parsePacketArgs(char *packet, ofPtr<ofxTcpOscMessage> m
 }
 
 
+bool ofxTcpOscReceiver::sendMessage(ofxTcpOscMessage &message) {
+
+    using namespace ofxTcpOsc;
+    
+    vector<char> output;
+    
+    // add address
+    appendStringToOscString(message.getAddress(), output);
+
+    // add Osc Type Tag String
+    string oscTypeTagString = makeOscTypeTagString(message);
+    appendStringToOscString(oscTypeTagString, output);
+
+    // add arguments
+    using namespace ofxTcpOsc;
+    for (int i=0; i<message.getNumArgs(); i++) {
+        vector<char> buf;
+        if (message.getArgType(i) == OFXTCPOSC_TYPE_INT32) {
+            int32_to_chars(message.getArgAsInt32(i), buf);
+        } else if (message.getArgType(i) == OFXTCPOSC_TYPE_INT64) {
+            int64_to_chars(message.getArgAsInt64(i), buf);
+        } else if (message.getArgType(i) == OFXTCPOSC_TYPE_FLOAT) {
+            float_to_chars(message.getArgAsFloat(i), buf);
+        } else if (message.getArgType(i) == OFXTCPOSC_TYPE_STRING) {
+            makeOscString(message.getArgAsString(i), buf);
+            
+        } else {
+            ofLogError("ofxTcpOscSender") << "sendMessage(): bad argument type " << message.getArgType(i);
+            assert(false);
+            return false;
+        }
+        for (unsigned int i=0; i<buf.size(); i++) {
+            output.push_back(buf[i]);
+        }
+    }
+    
+    // add size of the packet
+    int numInt32 = 4;
+    int32_t size = output.size() + numInt32;
+    vector<char> sizeStr;
+    int32_to_chars(size, sizeStr);
+    
+    // prepend the size string
+    for (int i=sizeStr.size()-1; i>=0; i--) {
+        vector<char>::iterator it = output.begin();
+        output.insert(it, sizeStr[i]);
+    }
+    if (! server.sendRawBytesToAll(output.data(), output.size()))
+    {
+        return false;
+    }
+    return true;
+}
+
+void ofxTcpOscReceiver::appendStringToOscString(string input, vector<char> &output) {
+    int numNulls = 4 - input.size() % 4;
+    if (numNulls == 0) {
+        numNulls = 4;
+    }
+    for (unsigned int i=0; i<input.size(); i++) {
+        output.push_back(input[i]);
+    }
+    for (int i=0; i<numNulls; i++) {
+        output.push_back(0);
+    }
+}
+
+void ofxTcpOscReceiver::makeOscString(string input, vector<char> &output) {
+    int numNulls = input.size() % 4;
+    if (numNulls == 0) {
+        numNulls = 4;
+    }
+    for (unsigned int i=0; i<input.size(); i++) {
+        output.push_back(input[i]);
+    }
+    for (int i=0; i<numNulls; i++) {
+        output.push_back(0);
+    }
+    // return output;
+}
+
+string ofxTcpOscReceiver::makeOscTypeTagString(ofxTcpOscMessage &message) {
+    string oscTypeTagString = ",";
+    
+    for (int i=0; i<message.getNumArgs(); i++) {
+        if (message.getArgType(i) == OFXTCPOSC_TYPE_INT32) {
+            oscTypeTagString.append("i");
+        } else if (message.getArgType(i) == OFXTCPOSC_TYPE_INT64) {
+            oscTypeTagString.append("h");
+        } else if (message.getArgType(i) == OFXTCPOSC_TYPE_FLOAT) {
+            oscTypeTagString.append("f");
+        } else if (message.getArgType(i) == OFXTCPOSC_TYPE_STRING) {
+            oscTypeTagString.append("s");
+        } else {
+            ofLogError("ofxTcpOscSender") << "makeOscTypeTagString(): bad argument type " << message.getArgType(i);
+            assert(false);
+        }
+    }
+    return oscTypeTagString;
+}
 
 
