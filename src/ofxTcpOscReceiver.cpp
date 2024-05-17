@@ -10,7 +10,6 @@
 using namespace ofxTcpOsc;
 
 ofxTcpOscReceiver::ofxTcpOscReceiver() {
-    
 }
 
 ofxTcpOscReceiver::~ofxTcpOscReceiver() {
@@ -18,6 +17,7 @@ ofxTcpOscReceiver::~ofxTcpOscReceiver() {
 }
 
 bool ofxTcpOscReceiver::setup(int listen_port) {
+
     ofxTCPSettings settings(listen_port);
 
     settings.blocking = false;  // not blocking
@@ -25,7 +25,6 @@ bool ofxTcpOscReceiver::setup(int listen_port) {
 
     if (! server.setup(settings))
         return false;
-    ofAddListener(ofEvents().update, this, &ofxTcpOscReceiver::update);
     return true;
 }
 
@@ -33,14 +32,20 @@ void ofxTcpOscReceiver::shutdown() {
     server.close();
 }
 
-void ofxTcpOscReceiver::update(ofEventArgs & args) {
+void ofxTcpOscReceiver::update() 
+{
     // allows multiple connections
     // though it is intended to have only one connection
-    for (int i=0; i<server.getLastID(); i++) {
-        if (server.isClientConnected(i)) {
-            _receiveOscMessages(i, _messages);
-        }
+
+    if (cycle < server.getLastID())
+    {
+        if (server.isClientConnected(cycle))
+            _receiveOscMessages(cycle, _messages);
+        cycle++;
     }
+    else
+        cycle = 0;
+    // printf("cycle %d\n", cycle);  // av, may 2024: to avoid performance issues
 }
 
 bool ofxTcpOscReceiver::hasWaitingMessages() {
@@ -57,6 +62,7 @@ bool ofxTcpOscReceiver::getNextMessage(ofxTcpOscMessage * m) {
 //#pragma mark - Private Methods
 
 void ofxTcpOscReceiver::_receiveOscMessages(int clientId, deque<ofPtr<ofxTcpOscMessage> > &messages) {
+
     int received = server.receiveRawBytes(clientId, packet, nBytes);
     if (received <= 0) {
         return;
@@ -82,6 +88,7 @@ void ofxTcpOscReceiver::_receiveOscMessages(int clientId, deque<ofPtr<ofxTcpOscM
     m->setRemoteEndpoint(host, port);
 
     _messages.push_back(m);
+
 }
 
 int ofxTcpOscReceiver::_parsePacketSize(char *packet, int &output) {

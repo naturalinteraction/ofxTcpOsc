@@ -19,7 +19,7 @@ public:
     ~ofxTcpOscReceiver();
     
     bool setup(int listen_port);
-    void update(ofEventArgs & args);
+    void update();
     bool hasWaitingMessages();
     bool getNextMessage(ofxTcpOscMessage *);
 
@@ -45,6 +45,7 @@ private:
 
     deque<ofPtr<ofxTcpOscMessage> > _messages;
     
-    int nBytes = 4096;
-    char packet[4096];
+    int nBytes = 2048;
+    char packet[2048];
+    int cycle = 0;
 };
